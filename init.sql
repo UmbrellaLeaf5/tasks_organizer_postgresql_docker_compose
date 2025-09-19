@@ -1,28 +1,16 @@
 CREATE TABLE
-  "notes" (
-    "id" BIGINT NOT NULL,
-    "author_id" BIGINT NOT NULL,
-    "title" TEXT NOT NULL,
-    "text" TEXT NOT NULL DEFAULT '""',
-    "created_at" TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
+  users (
+    id BIGSERIAL PRIMARY KEY,
+    short_name TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL
   );
 
 CREATE TABLE
-  "users" (
-    "id" BIGINT NOT NULL,
-    "short_name" TEXT NOT NULL,
-    "name" TEXT NOT NULL
+  notes (
+    id BIGSERIAL PRIMARY KEY,
+    author_id BIGINT NOT NULL,
+    title TEXT NOT NULL UNIQUE,
+    text TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT notes_author_id_foreign FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
   );
-
--- MARK: primary key
-ALTER TABLE "users" ADD PRIMARY KEY ("id");
-
-ALTER TABLE "notes" ADD PRIMARY KEY ("id");
-
--- MARK: foreign key
-ALTER TABLE "notes" ADD CONSTRAINT "notes_author_id_foreign" FOREIGN KEY ("author_id") REFERENCES "users" ("id") ON DELETE CASCADE;
-
--- MARK: unique
-ALTER TABLE "notes" ADD CONSTRAINT "notes_title_unique" UNIQUE ("title");
-
-ALTER TABLE "users" ADD CONSTRAINT "users_short_name_unique" UNIQUE ("short_name");

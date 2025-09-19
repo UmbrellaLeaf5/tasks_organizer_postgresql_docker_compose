@@ -1,16 +1,27 @@
+DROP SEQUENCE IF EXISTS users_id_seq CASCADE;
+
+DROP SEQUENCE IF EXISTS notes_id_seq CASCADE;
+
+CREATE SEQUENCE users_id_seq START 1 INCREMENT 50;
+
+CREATE SEQUENCE notes_id_seq START 1 INCREMENT 50;
+
 CREATE TABLE
   users (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT NOT NULL DEFAULT nextval ('users_id_seq') PRIMARY KEY,
     short_name TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL
   );
 
 CREATE TABLE
   notes (
-    id BIGSERIAL PRIMARY KEY,
-    author_id BIGINT NOT NULL,
+    id BIGINT NOT NULL DEFAULT nextval ('notes_id_seq') PRIMARY KEY,
+    author_id BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     title TEXT NOT NULL UNIQUE,
     text TEXT NOT NULL DEFAULT '',
-    created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT notes_author_id_foreign FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+ALTER SEQUENCE notes_id_seq OWNED BY notes.id;

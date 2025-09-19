@@ -20,7 +20,7 @@ ALTER TABLE "users" ADD PRIMARY KEY ("id");
 ALTER TABLE "notes" ADD PRIMARY KEY ("id");
 
 -- MARK: foreign key
-ALTER TABLE "notes" ADD CONSTRAINT "notes_author_id_foreign" FOREIGN KEY ("author_id") REFERENCES "users" ("id");
+ALTER TABLE "notes" ADD CONSTRAINT "notes_author_id_foreign" FOREIGN KEY ("author_id") REFERENCES "users" ("id") ON DELETE CASCADE;
 
 -- MARK: unique
 ALTER TABLE "notes" ADD CONSTRAINT "notes_title_unique" UNIQUE ("title");
